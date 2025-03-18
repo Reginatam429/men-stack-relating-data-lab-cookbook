@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Recipe</title>
+</head>
+<body>
+    <%- include('../partials/_navbar.ejs') %>
+    <h1>Add a New Recipe</h1>
+
+    <form action="/recipes" method="POST">
+        <label for="name">Recipe Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+
+        <label for="instructions">Instructions:</label>
+        <textarea id="instructions" name="instructions" rows="5"></textarea>
+        <br>
+
+        <label for="ingredients">Ingredients:</label>
+        <select name="ingredients" id="ingredients" multiple>
+            <% ingredients.forEach(ingredient => { %>
+                <option value="<%= ingredient._id %>"><%= ingredient.name %></option>
+            <% }) %>
+        </select>
+        <br>
+        <!-- Allow users to type new ingredients -->
+        <label for="newIngredient">Add a New Ingredient:</label>
+        <div id="new-ingredients-container">
+            <input type="text" name="newIngredients[]" class="new-ingredient" placeholder="Type an ingredient">
+        </div>
+        <button type="button" id="add-ingredient">➕ Add Another Ingredient</button>
+        <br>
+
+        <button type="submit">Submit Recipe</button>
+    </form>
+    <script>
+        document.getElementById("add-ingredient").addEventListener("click", function () {
+        const container = document.getElementById("new-ingredients-container");
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = "newIngredients[]"; // Ensure the backend receives an array
+        input.className = "new-ingredient";
+        input.placeholder = "Type an ingredient";
+        container.appendChild(document.createElement("br"));
+        container.appendChild(input);
+    });
+
+    function logFormData(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        console.log("🟢 Form Data Sent:", Object.fromEntries(formData.entries())); // Log form data
+        event.target.submit();
+    }
+    </script>
+
+    <br>
+    <a href="/recipes">⬅ Back to My Recipes</a>
+</body>
+</html>
